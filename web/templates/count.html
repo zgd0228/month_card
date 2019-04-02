@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block table %}
+    <div style="padding: 50px 10px 20px 20px">
+        <div class="day" style="height: 32px;padding-bottom: 20px">
+            <span style="display: inline-block;font-size: 24px">今日收入 : {{ count_day }} 元 </span>
+        </div>
+        <div class="month" style="height: 32px;padding-top: 20px">
+            <span style="display: inline-block;font-size: 24px">月收入 : {{ count_month }} 元 </span>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <style>
+        tr.active {
+            border-left: 3px solid #fdc00f;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        .panel-body {
+            font-size: 12px;
+        }
+    </style>
+
+{% endblock %}
+{% block table %}
+{% load my_tags %}
+    <div class="col-lg-3">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading ">
+            <i class="fa fa-book" aria-hidden="true"></i> 一级菜单
+            <a href="{% memory_url request 'menu_add' %}" class="btn btn-success pull-right btn-xs" style="padding: 2px 8px;margin: -3px;">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                    添加
+                </a>
+            </div>
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>图标</th>
+                    <th>选项</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for menu in menus %}
+                    <tr class="{% if menu.id|safe == row_id %}active{% endif %}">
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><a href="?mid={{ menu.id }}">{{ menu.title }}</a></td>
+                        <td>
+                            <i class="fa {{ menu.icon }}" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <a style="color: #333333;" href="{% memory_url request 'menu_edit' id=menu.pk %}">
+                                <i class="fa fa-edit" aria-hidden="true"></i></a>
+                            |
+                            <a style="color: #d9534f;" href="{% memory_url request 'menu_delete' id=menu.pk %}"><i
+                                    class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading ">
+            <i class="fa fa-free-code-camp" aria-hidden="true"></i> 二级菜单
+                {% if row_id %}
+                    <a href="{% memory_url request 'second_menu_add' menu_id=row_id %}" class="btn btn-success pull-right btn-xs" style="padding: 2px 8px;margin: -3px;">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                    添加
+                </a>
+                {% endif %}
+
+            </div>
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>COOK&URL</th>
+                    <th>选项</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for second in seconds %}
+                    <tr class="{% if second.id|safe == sid %}active{% endif %}">
+                        <th rowspan="2">{{ forloop.counter }}</th>
+                        <td rowspan="2"><a href="?mid={{ row_id }}&sid={{ second.id }}" >{{ second.title }}</a></td>
+                        <td>
+                            {{ second.name }}
+                        </td>
+
+                        <td >
+                            <a style="color: #333333;" href="{% memory_url request 'second_menu_edit' id=second.id %}">
+                                <i class="fa fa-edit" aria-hidden="true"></i></a>
+                            |
+                            <a style="color: #d9534f;" href="{% memory_url request 'second_menu_delete' id=second.id %}"><i
+                                    class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="{% if second.id|safe == sid %}active{% endif %}">
+                        <td colspan="3" style="border-top: 0">{{ second.urls }}</td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading ">
+            <i class="fa fa-free-code-camp" aria-hidden="true"></i> 权限
+                {% if sid %}
+                    <a href="{% memory_url request 'permission_menu_add' sid=sid %}" class="btn btn-success pull-right btn-xs" style="padding: 2px 8px;margin: -3px;">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                    添加
+                </a>
+                    <a href="{% memory_url request 'multi_list' %}" class="btn btn-xs btn-primary pull-right"
+                           style="padding: 2px 8px;margin: -3px 4px;">
+                            <i class="fa fa-mail-forward" aria-hidden="true"></i>
+                            批量操作
+                        </a>
+                {% endif %}
+
+            </div>
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>COOK&URL</th>
+                    <th>选项</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for per in pers %}
+                    <tr class="{% if per.id|safe == sid %}active{% endif %}">
+                        <th rowspan="2">{{ forloop.counter }}</th>
+                        <td rowspan="2">{{ per.title }}</td>
+                        <td>
+                            {{ per.name }}
+                        </td>
+
+                        <td >
+                            <a style="color: #333333;" href="{% memory_url request 'permission_menu_edit' id=per.id %}">
+                                <i class="fa fa-edit" aria-hidden="true"></i></a>
+                            |
+                            <a style="color: #d9534f;" href="{% memory_url request 'permission_menu_delete' id=per.id %}"><i
+                                    class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="border-top: 0">{{ per.urls }}</td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

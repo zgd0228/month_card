@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block css %}
+    <style>
+        .payment input {
+            display: inline-block;
+            width: 90%;
+        }
+
+        .payment span {
+            margin: 0 5px;
+        }
+    </style>
+{% endblock %}
+{% block table %}
+    {% load my_tags %}
+    <div>用户信息</div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>卡号</td>
+            <td>开卡时间</td>
+            <td>截止时间</td>
+            <td>消费记录</td>
+            <td>状态</td>
+            {% if request|has_permission:'reset_pwd' %}
+                <td>重置密码</td>
+            {% endif %}
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ customers.number }}</td>
+            <td>{{ customers.start_time|date:'Y-m-d' }}</td>
+            <td>{{ customers.end_time|date:'Y-m-d' }}</td>
+            <td>
+                <a href="/payment/list/{{ customers.pk }}">消费记录</a>
+            </td>
+            {% if state %}
+                <td><a href="/payment/add/{{ customers.pk }}">重新开通</a></td>
+            {% else %}
+                <td><span style="color: dodgerblue">正常</span></td>
+            {% endif %}
+
+            {% if request|has_permission:'reset_pwd' %}
+                <td>
+                    <a href="/customer/reset/{{ customers.pk }}">重置密码</a>
+                </td>
+            {% endif %}
+        </tr>
+        </tbody>
+    </table>
+    <div class="payment">
+        <form action="" method="">
+            {% csrf_token %}
+            <table class="table table-bordered payments">
+                <thead>
+                <tr>
+                    <td>蛋壳消费</td>
+                    <td>HTC消费</td>
+                    <td>战马消费</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input type="text" name="dk" class="form-control dk" placeholder="{{ dk }}">
+                        <span>次</span>
+                    </td>
+                    <td>
+                        <input type="text" name="htc" class="form-control htc" placeholder="{{ htc }}"><span>分钟</span>
+                    </td>
+                    <td>
+                        <input type="text" name="zm" class="form-control zm" placeholder="{{ zm }}"><span>次</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <span class="mess"></span>
+            </div>
+            {% if state %}
+                <div style="text-align: center">
+                    <button class="btn btn-success" disabled style="width: 100px" type="button" id="btn1">提交</button>
+                </div>
+            {% else %}
+                <div style="text-align: center">
+                    <button class="btn btn-success" style="width: 100px" type="button" id="btn1">提交</button>
+                </div>
+            {% endif %}
+
+        </form>
+    </div>
+    <script>
+        $('#btn1').click(function () {
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: {
+                    htc: $('.htc').val(),
+                    zm: $('.zm').val(),
+                    dk: $('.dk').val(),
+                    csrfmiddlewaretoken: $("input[name = 'csrfmiddlewaretoken']").val()
+                },
+                success: function (data) {
+                    if (data.mes) {
+                        $('.mess').text(data.mes).css('color', 'red');
+                        $('.payments').children().find('input').val('')
+                    }
+                    else {
+                        location.href = '/customer/list/'
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

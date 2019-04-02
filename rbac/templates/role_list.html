@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block table %}
+
+    <div class="btn-group" style="margin: 5px 0">
+        <a href="{% url 'role_add' %}" class="btn btn-default">
+            <i class="fa fa-plus-square" aria-hidden="true"></i>
+            添加角色
+        </a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>名称</td>
+            <td>选项</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for role in roles %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ role.title }}</td>
+                <td>
+                    <a style="color: #333333;" href="{% url 'role_edit' rid=role.pk %}">
+                        <i class="fa fa-edit" aria-hidden="true"></i></a>
+                    |
+                    <a style="color: #d9534f;" href="{% url 'role_delete' rid=role.pk %}"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

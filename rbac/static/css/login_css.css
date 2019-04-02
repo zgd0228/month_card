@@ -1,0 +1,17 @@
+*{
+            margin: 0;
+            padding: 0;
+        }
+        div h4{
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .row{
+            margin-top: 100px;
+        }
+        .button{
+            text-align: center;
+        }
+        #login_btn{
+            width: 150px;
+        }

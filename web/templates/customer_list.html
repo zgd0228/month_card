@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block css %}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-weight: 500;
+            font-family: "Microsoft YaHei", "宋体", "Segoe UI", "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
+        }
+
+        div.search {
+            padding: 2px 0;
+            width: 350px;
+        }
+
+        form {
+            position: relative;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        input, button {
+            border: none;
+            outline: none;
+        }
+
+        input {
+            width: 100%;
+            height: 42px;
+            padding-left: 13px;
+        }
+
+        button {
+            height: 42px;
+            width: 42px;
+            cursor: pointer;
+            border-radius: 5px;
+            position: absolute;
+        }
+
+        /*搜索框1*/
+        .bar1 input {
+            border: 2px solid #7BA7AB;
+            border-radius: 5px;
+            background: #F9F0DA;
+            color: #9E9C9C;
+            padding-left: 10px;
+        }
+
+        .bar1 button {
+            top: 0;
+            right: 0;
+            background: #7BA7AB;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .bar1 button:before {
+            content: "\f002";
+            font-family: FontAwesome;
+            font-size: 16px;
+            color: #F9F0DA;
+        }
+    .page{
+        position: fixed;
+        top: 600px;
+        right: 500px;
+        left: 600px;
+        bottom: 100px;
+    }
+    </style>
+{% endblock %}
+{% block table %}
+    {% load my_tags %}
+    <div style="overflow: hidden">
+        <div class="btn-group" style="margin: 5px 0">
+        <a href="{% url 'customer_add' %}" class="btn btn-default">
+            <i class="fa fa-plus-square" aria-hidden="true"></i>
+            添加客户
+        </a>
+    </div>
+    <div class="search bar1 right">
+        <form method="" action="">
+            {% csrf_token %}
+            <input type="text" placeholder="请输入卡号" name="card" class="card">
+
+            <button type="button" id="search"></button>
+        </form>
+        <span class="return"></span>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>卡号</td>
+            <td>开卡时间</td>
+            <td>截止时间</td>
+            <td>选项</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for customer in customer_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ customer.number }}</td>
+                <td>{{ customer.start_time|date:'Y-m-d' }}</td>
+                <td>{{ customer.end_time|date:'Y-m-d' }}</td>
+                <td>
+                    <a style="color: #d9534f;" href="{% memory_url request 'customer_delete' uid=customer.pk %}"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="page">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if customer_list.has_previous %}
+                    <li><a href="?page={{ customer_list.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">上一页</span></a></li>
+                {% else %}
+                    <li class="disabled"><a href="#" aria-label="Previous">
+                        <span aria-hidden="true">上一页</span></a></li>
+                {% endif %}
+
+                {% for page in page_range %}
+                    {% if page == current_page %}
+                        <li class="active"><a href="?page={{ page }} ">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="?page={{ page }} ">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if customer_list.has_next %}
+                    <li class=""><a href="?page={{ customer_list.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">下一页</span></a></li>
+                {% else %}
+                    <li class="disabled"><a href="#" aria-label="Next">
+                        <span aria-hidden="true">下一页</span></a></li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
+    </div>
+
+
+    <script>
+        $('#search').click(function () {
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: {
+                    card: $('.card').val(),
+                    csrfmiddlewaretoken: $("input[name = 'csrfmiddlewaretoken']").val()
+                },
+                success: function (data) {
+                    if (data.user) {
+                        location.href = '/customer/info/' + data.user
+                    }
+                    else {
+                        $('.return').text(data.msg).css('color', 'red')
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

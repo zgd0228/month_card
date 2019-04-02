@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block table %}
+
+    <div class="btn-group" style="margin: 5px 0">
+        <a href="{% url 'user_add' %}" class="btn btn-default">
+            <i class="fa fa-plus-square" aria-hidden="true"></i>
+            添加用户
+        </a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>姓名</td>
+            <td>年龄</td>
+            <td>邮箱</td>
+            <td>电话</td>
+            <td>重置密码</td>
+            <td>选项</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for user in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.tel }}</td>
+                <td><a href="{% memory_url request 'reset_pwd' id=user.pk %}">重置密码</a></td>
+                <td>
+                    <a style="color: #333333;" href="{% memory_url request 'user_edit' id=user.pk %}">
+                        <i class="fa fa-edit" aria-hidden="true"></i></a>
+                    |
+                    <a style="color: #d9534f;" href="{% memory_url request 'user_delete' id=user.pk %}"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

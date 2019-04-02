@@ -1,0 +1,63 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理系统</title>
+    <link rel="stylesheet" href="{% static 'boot/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_css.css' %}">
+    <script src="{% static 'jquery/jquery-3.3.1.min.js' %}"></script>
+</head>
+<body>
+
+<div class="row">
+    <div class="col-md-4 col-lg-offset-4">
+        <h4>登录页面</h4>
+        <form>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="user">
+                    用户名
+                </label>
+                <input type="text" name="user" class="form-control user_login">
+            </div>
+            <div class="form-group">
+                <label for="pwd">
+                    密码
+                </label>
+                <input type="password" name="pwd" class="form-control pwd_login">
+            </div>
+            <div class="form-group">
+                <span class="login_msg" style="color: red"></span>
+            </div>
+            <div class="form-group button">
+                <button class="btn btn-success" id="login_btn" type="button">登陆</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $('#login_btn').click(function () {
+        $.ajax({
+            url:'',
+            type:'post',
+            data:{
+                user:$('.user_login').val(),
+                pwd:$('.pwd_login').val(),
+                csrfmiddlewaretoken: $("input[name = 'csrfmiddlewaretoken']").val()
+            },
+            success: function (data) {
+                if(data.user){
+                    location.href = '/index/'
+                }
+                else {
+                    $('.login_msg').text(data.msg)
+                }
+
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

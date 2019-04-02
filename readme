@@ -1,0 +1,4 @@
+d:
+cd yue
+cd month_card
+python manage.py runserver

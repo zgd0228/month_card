@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block css %}
+    <style>
+        .payment_list td {
+            text-align: center;
+            width: 700px;
+        }
+    </style>
+{% endblock %}
+{% block table %}
+    <div class="payment_list">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>用户消费详情</td>
+            </tr>
+            </thead>
+            <tbody>
+                {% for foo in payment_obj %}
+                <tr>
+
+                        <td>
+                            用户 {{ foo.user }} 在 {{ foo.pay_time|date:'Y-m-d H:i' }} 消费
+                            <span style="color: #2aabd2">{{ foo.games }}</span>
+                            游戏 {{ foo.time }} 分钟
+                        </td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
